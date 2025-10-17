@@ -21,30 +21,30 @@ logs:
 
 dev:
 	$(MAKE) up
-	pnpm -w run dev
+	pnpm -r --filter ./apps/* run dev
 
 build:
-	pnpm -w run build
+	pnpm -r run build
 
 lint:
-	pnpm -w run lint
+	pnpm -r run lint
 
 format:
-	pnpm -w run format
+	prettier --write .
 
 typecheck:
-	pnpm -w run typecheck
+	pnpm -r run typecheck
 
 test:
-	pnpm -w run test
+	vitest run
 
-# Database helpers (stubs for now)
+# Database helpers
 
 db-start:
 	docker compose up -d postgres
 
 db-migrate:
-	@echo "TODO: implement prisma migrate"
+	pnpm --filter @contentive/seller-agent-api run prisma:migrate
 
 db-seed:
-	@echo "TODO: implement seed script"
+	pnpm --filter @contentive/seller-agent-api run prisma:seed
