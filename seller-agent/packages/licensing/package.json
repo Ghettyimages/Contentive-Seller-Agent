@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "zod": "^3.23.8",
-    "@contentive/core": "0.0.0"
+    "@contentive/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.7.7",

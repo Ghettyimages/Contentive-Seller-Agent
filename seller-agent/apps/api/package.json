@@ -1,8 +1,8 @@
 {
-  "name": "@contentive/seller-agent-api",
+  "name": "api",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "ts-node src/main.ts",
     "build": "tsc -p tsconfig.json",
@@ -12,6 +12,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
     "prisma:seed": "ts-node prisma/seed.ts",
+    "db:migrate": "pnpm run prisma:migrate",
+    "db:seed": "pnpm run prisma:seed",
     "test": "vitest run"
   },
   "dependencies": {
@@ -21,7 +23,12 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "zod": "^3.23.8",
-    "@prisma/client": "^5.20.0"
+    "@prisma/client": "^5.20.0",
+    "@contentive/auth": "workspace:*",
+    "@contentive/core": "workspace:*",
+    "@contentive/adapters": "workspace:*",
+    "@contentive/reporting": "workspace:*",
+    "@contentive/licensing": "workspace:*"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
