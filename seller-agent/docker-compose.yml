@@ -1,0 +1,60 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: seller_agent
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+    image: ghcr.io/<ORG_NAME>/seller-agent-api:dev
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/seller_agent
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: replace-me
+      API_HMAC_SECRET: replace-me
+      LICENSE_SIGNING_KEY: replace-me
+    volumes:
+      - ./apps/api:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+      - redis
+
+  admin:
+    build:
+      context: .
+      dockerfile: infra/docker/admin.Dockerfile
+    image: ghcr.io/<ORG_NAME>/seller-agent-admin:dev
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:4000
+      GOOGLE_CLIENT_ID: replace-me
+      GOOGLE_CLIENT_SECRET: replace-me
+    volumes:
+      - ./apps/admin:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
