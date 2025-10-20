@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  products  Product[]
+  creativeSpecs CreativeSpec[]
+  mediaBuys  MediaBuy[]
+  apiKeys    ApiKey[]
+  properties AuthorizedProperty[]
+  adapterConfigs AdapterConfig[]
+  licenses  License[]
+}
+
+model Product {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  name      String
+  floorCpm  Float
+  creativeFormats String[]
+  targeting Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CreativeSpec {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  format    String
+  width     Int
+  height    Int
+  maxSizeKb Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MediaBuy {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  name      String
+  budget    Float
+  status    String   @default("pending")
+  snapshots DeliverySnapshot[]
+  externalId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DeliverySnapshot {
+  id        String   @id @default(cuid())
+  mediaBuy  MediaBuy @relation(fields: [mediaBuyId], references: [id])
+  mediaBuyId String
+  rangeFrom DateTime
+  rangeTo   DateTime
+  impressions Int
+  clicks    Int
+  spend     Float
+  createdAt DateTime @default(now())
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  key       String   @unique
+  createdAt DateTime @default(now())
+}
+
+model AuthorizedProperty {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  domain    String
+  appName   String?
+  createdAt DateTime @default(now())
+}
+
+model AdapterConfig {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  adapter   String
+  config    Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model License {
+  id        String   @id @default(cuid())
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId  String
+  token     String
+  createdAt DateTime @default(now())
+}

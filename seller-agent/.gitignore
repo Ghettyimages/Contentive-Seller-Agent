@@ -1,0 +1,48 @@
+# Node
+node_modules/
+.npm/
+.pnpm-store/
+.pnp.*
+
+# pnpm
+pnpm-lock.yaml
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Next.js
+.next/
+out/
+.vercel/
+
+# Docker
+.docker/
+
+# Build artifacts
+coverage/
+dist/
+build/
+.cache/
+.next-cache/
+
+# Editor
+.idea/
+.vscode/
+.DS_Store
+
+# Prisma
+**/prisma/migrations/
+**/prisma/dev.db*
+
+# Misc
+*.swp
